@@ -6,7 +6,6 @@ Before getting started, ensure you have the following:
 
 - An AWS account: [Sign up for Free Tier](https://aws.amazon.com/free/?gclid=CjwKCAjw34qzBhBmEiwAOUQcF0FfXS-1S1ephmxVFN2kEk12mhGDOdajO3VwBJkgBeWcnBqr-iTuCxoCnYYQAvD_BwE&trk=349e66be-cf8d-4106-ae2c-54262fc45524&sc_channel=ps&ef_id=CjwKCAjw34qzBhBmEiwAOUQcF0FfXS-1S1ephmxVFN2kEk12mhGDOdajO3VwBJkgBeWcnBqr-iTuCxoCnYYQAvD_BwE:G:s&s_kwcid=AL!4422!3!455709741582!e!!g!!aws%20free%20account!10817378576!108173614202)
 - Docker installed on your local machine: [Docker Installation Guide](https://www.youtube.com/watch?v=snKOKWiiTok&t=668s)
-- A DockerHub account: [Sign up for DockerHub](https://hub.docker.com/signup)
 - GitHub account: [Sign up for GitHub](https://github.com/signup)
 
 ## Running the Application locally

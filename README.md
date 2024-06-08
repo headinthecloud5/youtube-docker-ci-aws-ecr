@@ -51,7 +51,8 @@ git push origin main
 
 7. Check your AWS account under ECR service, look for the newly created Docker image.
 
-### Follow our YouTube video for the following workflow configuration in docker-build.yml. 
+### Check out our YouTube Tutorial!
+For a comprehensive step-by-step guide on setting up and using this automated workflow, watch our tutorial video on YouTube. In the video, we walk you through the entire process, from configuring the Dockerfile, nodejs + dependencies, and GitHub Actions workflow to pushing Docker images to AWS ECR.
 
 ## License
 This project is licensed under the MIT License.

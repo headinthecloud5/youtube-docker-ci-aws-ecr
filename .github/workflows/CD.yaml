@@ -1,0 +1,57 @@
+name: Deploy to AWS Fargate
+
+on:
+  workflow_run:
+    workflows: ["Build and Push Node.js Image to AWS ECR"]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    name: Deploy to AWS Fargate
+    runs-on: ubuntu-latest
+
+    env:
+      AWS_REGION: eu-west-1
+      ECR_REPOSITORY: hitc-docker-cicd-ecr
+      ECS_CLUSTER: my-cluster
+      ECS_SERVICE: my-service
+      ECS_TASK_FAMILY: my-task
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Read Version from VERSION file
+        id: get-version
+        run: |
+          if [ -f VERSION ]; then
+            VERSION=$(cat VERSION)
+          else
+            echo "VERSION file not found. Exiting..."
+            exit 1
+          fi
+          echo "Deploying version: $VERSION"
+          echo "version=$VERSION" >> $GITHUB_ENV
+
+      - name: Update ECS Task Definition
+        id: update-task
+        run: |
+          TASK_DEFINITION=$(aws ecs describe-task-definition --task-definition $ECS_TASK_FAMILY)
+          NEW_TASK_DEF=$(echo "$TASK_DEFINITION" | jq --arg IMAGE "${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY:$version" '.taskDefinition | .containerDefinitions[0].image=$IMAGE')
+          NEW_TASK_DEF=$(echo "$NEW_TASK_DEF" | jq 'del(.taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities, .registeredAt, .registeredBy)')
+          echo "$NEW_TASK_DEF" > new-task-def.json
+          NEW_REVISION=$(aws ecs register-task-definition --cli-input-json file://new-task-def.json | jq .taskDefinition.revision)
+          echo "NEW_REVISION=$NEW_REVISION" >> $GITHUB_ENV
+
+      - name: Deploy to Fargate
+        run: |
+          aws ecs update-service --cluster $ECS_CLUSTER --service $ECS_SERVICE --task-definition $ECS_TASK_FAMILY:$NEW_REVISION

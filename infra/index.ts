@@ -4,7 +4,6 @@ import * as awsx from "@pulumi/awsx";
 
 import { EcrComponent } from "./modules/ecr";
 
-
 // ECR repository
 const ecrRepo = new EcrComponent("app-dast-sast", {
   repositoryName: "app-dast-sast",

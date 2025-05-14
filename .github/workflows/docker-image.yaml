@@ -56,3 +56,5 @@ jobs:
       env:
         ECR_REGISTRY: ${{ steps.ecr-login.outputs.registry }}
         ECR_REPOSITORY: app-dast-sast
+
+        

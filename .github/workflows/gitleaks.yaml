@@ -1,16 +1,52 @@
-name: gitleaks
-on:
-  push:
-    branches: [main]
-
-jobs:
-  scan:
-    name: gitleaks
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+---
+  name: Secret Scan
+  
+  on:
+    pull_request:
+    push:
+      branches:
+        - main
+  
+  # allow one concurrency
+  concurrency:
+    group: ${{ format('{0}-{1}-{2}-{3}-{4}', github.workflow, github.event_name, github.ref, github.base_ref, github.head_ref) }}
+    cancel-in-progress: true
+  
+  jobs:
+    gitleaks:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v4
+          with:
+            fetch-depth: 0
+  
+        - name: Run Gitleaks
+          id: gitleaks
+          uses: DariuszPorowski/github-action-gitleaks@v2
+          with:
+            fail: false
+  
+        - name: Post PR comment
+          uses: actions/github-script@v7
+          if: ${{ steps.gitleaks.outputs.exitcode == 1 && github.event_name == 'pull_request' }}
+          with:
+            github-token: ${{ github.token }}
+            script: |
+              const { GITLEAKS_RESULT, GITLEAKS_OUTPUT } = process.env
+              const output = `### ${GITLEAKS_RESULT}
+  
+              <details><summary>Log output</summary>
+  
+              ${GITLEAKS_OUTPUT}
+  
+              </details>
+              `
+              github.rest.issues.createComment({
+                ...context.repo,
+                issue_number: context.issue.number,
+                body: output
+              })
+          env:
+            GITLEAKS_RESULT: ${{ steps.gitleaks.outputs.result }}
+            GITLEAKS_OUTPUT: ${{ steps.gitleaks.outputs.output }}

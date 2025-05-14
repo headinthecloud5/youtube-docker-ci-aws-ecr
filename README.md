@@ -56,9 +56,14 @@ For a comprehensive step-by-step guide on setting up and using this automated wo
 ## License
 This project is licensed under the MIT License.
 
-You are encouraged to tailor the workflow and Dockerfile to suit your specific needs. 
-<br/> 
-If you come across any challenges or have ideas for enhancements, don't hesitate to open an issue or send a pull request. Your contributions are greatly appreciated!
-<br/> 
-<br/> 
-Thank you for your interest and support!
+## 📘 About This Repository
+
+This code was created for [DOCKER | Build and Push Docker Images to AWS ECR with GitHub Actions](https://www.youtube.com/watch?v=TQIX1KA3yx4) tutorial on YouTube.
+
+🛑 The branch is **read-only** and **we do not accept pull requests**.
+
+📂 Feel free to **fork the repo** to experiment or make changes on your own.
+
+You are encouraged to tailor the code to suit your specific needs.
+
+Thanks for watching and learning!

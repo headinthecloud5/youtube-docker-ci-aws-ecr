@@ -1,0 +1,15 @@
+{
+  "name": "hitc-docker-cicd-ecr",
+  "version": "1.0.0",
+  "description": "This repository provides a streamlined solution for automating the process of building Docker images and pushing them to AWS Elastic Container Registry (ECR) using GitHub Actions. With these configurations and provided files, you can set up a seamless workflow to manage your containerised applications.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
